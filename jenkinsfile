@@ -1,6 +1,6 @@
 pipeline {
 	agent any
-	enviorment {
+	environment {
 		image_name = "madhu"
 		image_tag = "i"
 	}
@@ -15,7 +15,7 @@ pipeline {
 			steps{
 				script{
 					sh """
-						docker buid -t ${image_name}:${image_tag} .
+						docker build -t ${image_name}:${image_tag} .
 					"""
 				}
 			}
@@ -23,8 +23,8 @@ pipeline {
 		stage('login to Docker Hub'){
 			steps{
 				script{
-					withcredentials([usernamePassword(
-						credentialsId: 'dockerhub'
+					withCredentials([usernamePassword(
+						credentialsId:'dockerhub',
 						usernameVariable : 'DOCKER_USER',
 						passwordVariable : 'DOCKER_PASS'
 					)]){
@@ -41,12 +41,12 @@ pipeline {
 				}
 			}
 		}
-		stage('Deploy a container{
+		stage('Deploy a container)'{
 			steps{
 				script{
 					sh """
 					docker rm -f snake-app || true
-					docker run -d --name snake-app -p -d 3000:3000 ${image_name}:${image_tag}
+					docker run -d --name snake-app -d -p 3000:3000 ${image_name}:${image_tag}
 					"""
 				}
 			}
