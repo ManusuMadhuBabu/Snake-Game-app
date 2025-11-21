@@ -1,0 +1,56 @@
+pipeline {
+	agent any
+	enviorment {
+		image_name = "madhu"
+		image_tag = "i"
+	}
+	stages{
+		stage('Checkout code') {
+			steps{
+				git branch : 'main' ,
+				url : 'https://github.com/ManusuMadhuBabu/Snake-Game-app.git'
+			}
+		}
+		stage('build Docker image'){
+			steps{
+				script{
+					sh """
+						docker buid -t ${image_name}:${image_tag} .
+					"""
+				}
+			}
+		}
+		stage('login to Docker Hub'){
+			steps{
+				script{
+					withcredentials([usernamePassword(
+						credentialsId: 'dockerhub'
+						usernameVariable : 'Docker_user',
+						passwordVariable : 'Docker_pass'
+					)]){
+						sh " echo $Docker_pass | docker login -u $Docker_user --password-stdin"
+						}
+				}
+		}
+		stage('push image to docker hub'){
+			steps{
+				script{
+					sh """
+					docker push ${image_name}:${image_tag}
+					"""
+				}
+			}
+		}
+		stage('Deploy a container{
+			steps{
+				script{
+					sh """
+					docker rm -f snake-app || true
+					docker run -d --name snake-app -p -d 3000:3000 ${image_name}:${image_tag}
+					"""
+				}
+			}
+		}
+
+	}
+}				
