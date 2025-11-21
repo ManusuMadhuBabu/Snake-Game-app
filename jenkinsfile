@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	environment {
-		image_name = "madhumanusu/snake-game-app"
+		image_name = "madhumanusu/madhu"
 		image_tag = "i"
 	}
 	stages{
