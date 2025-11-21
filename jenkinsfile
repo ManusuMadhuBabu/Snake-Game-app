@@ -7,8 +7,7 @@ pipeline {
 	stages{
 		stage('Checkout code') {
 			steps{
-				git branch : 'main' ,
-				url : 'https://github.com/ManusuMadhuBabu/Snake-Game-app.git'
+				git branch : 'main' , url : 'https://github.com/ManusuMadhuBabu/Snake-Game-app.git'
 			}
 		}
 		stage('build Docker image'){
@@ -23,11 +22,13 @@ pipeline {
 		stage('login to Docker Hub'){
 			steps{
 				script{
-					withCredentials([usernamePassword(
-						credentialsId:'dockerhub',
-						usernameVariable : 'DOCKER_USER',
-						passwordVariable : 'DOCKER_PASS'
-					)]){
+					withCredentials([
+						usernamePassword(
+							credentialsId:'dockerhub',
+							usernameVariable : 'DOCKER_USER',
+							passwordVariable : 'DOCKER_PASS'
+						)
+					  ]){
 						sh " echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
 						}
 				}
@@ -42,7 +43,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Deploy a container)'{
+		stage('Deploy a container'){
 			steps{
 				script{
 					sh """
