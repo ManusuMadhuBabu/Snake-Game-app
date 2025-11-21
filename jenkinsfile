@@ -31,6 +31,7 @@ pipeline {
 						sh " echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
 						}
 				}
+			}
 		}
 		stage('push image to docker hub'){
 			steps{
@@ -46,7 +47,7 @@ pipeline {
 				script{
 					sh """
 					docker rm -f snake-app || true
-					docker run -d --name snake-app -d -p 3000:3000 ${image_name}:${image_tag}
+					docker run -d --name snake-app -p 3000:3000 ${image_name}:${image_tag}
 					"""
 				}
 			}
